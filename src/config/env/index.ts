@@ -1,1 +1,1 @@
-export * from '@config/env';
+export * from '@config/env/env.config';

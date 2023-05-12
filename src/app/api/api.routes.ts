@@ -1,9 +1,12 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { userRoutes } from './user';
 import { apiMiddleware } from '@src/middlewares/responseHandler/apiMiddleware';
-import { adminRoutes } from './admin';
 import { Logger } from '@config/logger';
 import { metrics } from '@config/monitoring';
+import passport from 'passport';
+
+import { adminRoutes } from './admin';
+import { userRoutes } from './user';
+import { companyRoutes } from './company';
 
 const logger = new Logger();
 
@@ -13,6 +16,7 @@ router.use(apiMiddleware);
 
 router.use(userRoutes.path, userRoutes.router);
 router.use(adminRoutes.path, adminRoutes.router);
+router.use(companyRoutes.path, companyRoutes.router);
 
 /**
  * Get "hello world" message.
@@ -28,12 +32,21 @@ router.use(adminRoutes.path, adminRoutes.router);
  *       500:
  *         description: Error while getting message.
  */
-router.route('/hello').get((_req: Express.RequestWithData, res: Response, next: NextFunction) => {
-	try {
-		return res.locals.success('Hello World');
-	} catch (error) {
-		next(error);
-	}
+router
+	.route('/hello')
+	.get(
+		passport.authenticate('google', { successRedirect: '/v1/any', failureRedirect: '/login', scope: ['profile', 'email'] }),
+		(req: Request, res: Response, next: NextFunction) => {
+			try {
+				return res.locals.success('Hello World');
+			} catch (error) {
+				next(error);
+			}
+		}
+	);
+
+router.route('/any').get((req: Request, res: Response, next: NextFunction) => {
+	return res.send('Its here');
 });
 
 router.route('/app_metrics').get(metrics);

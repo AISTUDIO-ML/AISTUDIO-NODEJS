@@ -5,6 +5,7 @@ import cors from 'cors';
 import compression from 'compression';
 import helmet from 'helmet';
 import swaggerUi from 'swagger-ui-express';
+import session from 'express-session';
 import { logRequests } from '../middlewares';
 import router from '@app/app.routes';
 import swaggerSpec, { swaggerUIOptions } from '../app/swagger/swagger';
@@ -23,6 +24,14 @@ app.use(express.urlencoded({ extended: true }));
 
 // parse the cookies
 app.use(cookieParser());
+
+app.use(
+	session({
+		secret: 'Secret',
+		resave: false,
+		saveUninitialized: false,
+	})
+);
 
 // Log incoming requests
 app.use(logRequests());

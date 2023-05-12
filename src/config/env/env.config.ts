@@ -15,6 +15,10 @@ interface EnvVars {
 	RABBITMQ_URL: string;
 	RABBITMQ_QUEUE: string;
 	JWT_REFRESH_TOKEN_EXPIRATION: string;
+	PASSPORT_GOOGLE_CLIENT_ID: string;
+	PASSPORT_GOOGLE_CLIENT_SECRET: string;
+	PASSPORT_GITHUB_CLIENT_ID: string;
+	PASSPORT_GITHUB_CLIENT_SECRET: string;
 }
 
 const envVarsSchema = Joi.object<EnvVars>()
@@ -33,6 +37,10 @@ const envVarsSchema = Joi.object<EnvVars>()
 		REDIS_KEY_EXPIRATION_SECONDS: Joi.number().description('Redis session key expiry time in seconds'),
 		RABBITMQ_URL: Joi.string().description('URL for rabbitmq connection'),
 		RABBITMQ_QUEUE: Joi.string().description('rabbitmq queue name'),
+		PASSPORT_GOOGLE_CLIENT_ID: Joi.string(),
+		PASSPORT_GOOGLE_CLIENT_SECRET: Joi.string(),
+		PASSPORT_GITHUB_CLIENT_ID: Joi.string(),
+		PASSPORT_GITHUB_CLIENT_SECRET: Joi.string(),
 	})
 	.unknown();
 
@@ -61,5 +69,15 @@ export const config = {
 	rabbitmq: {
 		url: envVars.RABBITMQ_URL,
 		queue: envVars.RABBITMQ_QUEUE,
+	},
+	passport: {
+		google: {
+			clientID: envVars.PASSPORT_GOOGLE_CLIENT_ID,
+			clientSecret: envVars.PASSPORT_GOOGLE_CLIENT_SECRET,
+		},
+		github: {
+			clientID: envVars.PASSPORT_GITHUB_CLIENT_ID,
+			clientSecret: envVars.PASSPORT_GITHUB_CLIENT_SECRET,
+		},
 	},
 };
